@@ -21,15 +21,23 @@ case node['platform']
 when 'ubuntu','debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
+  default['redisio']['init_type'] = 'init'
 when 'centos','redhat','fedora','scientific','amazon','suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
+  default['redisio']['init_type'] = 'init'
 when 'fedora'
   shell = '/bin/sh'
   homedir = '/home'
+  default['redisio']['init_type'] = 'init'
+when 'smartos'
+  shell = '/bin/sh'
+  homedir = '/var/db/redis'
+  default['redisio']['init_type'] = 'smf'
 else
   shell = '/bin/sh'
   homedir = '/redis'
+  default['redisio']['init_type'] = 'init'
 end
 
 #Install related attributes

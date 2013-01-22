@@ -176,22 +176,45 @@ def configure
           :includes               => current['includes']
         })
       end
-      #Setup init.d file
-      template "/etc/init.d/redis#{current['port']}" do
-        source 'redis.init.erb'
-        cookbook 'redisio'
-        owner 'root'
-        group 'root'
-        mode '0755'
-        variables({
-          :port => current['port'],
-          :address => current['address'],
-          :user => current['user'],
-          :configdir => current['configdir'],
-          :piddir => piddir,
-          :requirepass => current['requirepass'],
-          :platform => node['platform']
-          })
+
+      case default['redisio']['init_type']
+      when 'init'
+        template "/etc/init.d/redis#{current['port']}" do
+          source 'redis.init.erb'
+          cookbook 'redisio'
+          owner 'root'
+          group 'root'
+          mode '0755'
+          variables({
+            :port => current['port'],
+            :address => current['address'],
+            :user => current['user'],
+            :configdir => current['configdir'],
+            :piddir => piddir,
+            :requirepass => current['requirepass'],
+            :platform => node['platform']
+            })
+        end
+      when 'smf'
+        cli_command = [
+            "/opt/local/bin/redis-cli",
+            "-h #{current['address']}",
+            "-p #{current['port']}"
+        ]
+
+        cli_command << "-a #{current['requirepass']}" if current['requirepass']
+
+        smf "redis#{current['port']}" do
+          user 'root'
+          group 'root'
+
+          start_command "/opt/local/bin/redis-server #{current['configdir']}/#{current['port']}.conf &"
+          start_timeout 60
+          stop_command "#{cli_command.join(' ')} shutdown"
+          stop_timeout 60
+
+          working_directory current['configdir']
+        end
       end
     end
   end # servers each loop
