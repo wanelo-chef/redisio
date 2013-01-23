@@ -21,22 +21,27 @@ case node['platform']
 when 'ubuntu','debian'
   shell = '/bin/false'
   homedir = '/var/lib/redis'
+  group = 'redis'
   default['redisio']['init_type'] = 'init'
 when 'centos','redhat','fedora','scientific','amazon','suse'
   shell = '/bin/sh'
   homedir = '/var/lib/redis' #this is necessary because selinux by default prevents the homedir from being managed in /var/lib/
+  group = 'redis'
   default['redisio']['init_type'] = 'init'
 when 'fedora'
   shell = '/bin/sh'
   homedir = '/home'
+  group = 'redis'
   default['redisio']['init_type'] = 'init'
 when 'smartos'
   shell = '/bin/sh'
   homedir = '/var/db/redis'
+  group = 'root'
   default['redisio']['init_type'] = 'smf'
 else
   shell = '/bin/sh'
   homedir = '/redis'
+  group = 'redis'
   default['redisio']['init_type'] = 'init'
 end
 
@@ -53,13 +58,14 @@ default['redisio']['base_piddir'] = '/var/run/redis'
 #Default settings for all redis instances, these can be overridden on a per server basis in the 'servers' hash
 default['redisio']['default_settings'] = {
   'user'                   => 'redis',
-  'group'                  => 'redis',
+  'group'                  => group,
   'homedir'                => homedir,
   'shell'                  => shell,
   'configdir'              => '/etc/redis',
   'address'                => nil,
   'databases'              => '16',
   'backuptype'             => 'rdb',
+  'backupprefix'           => nil,
   'datadir'                => '/var/lib/redis',
   'timeout'                => '0',
   'loglevel'               => 'verbose',

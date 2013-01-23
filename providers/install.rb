@@ -52,6 +52,15 @@ end
 
 def install
   execute "cd #{new_resource.download_dir}/#{new_resource.base_name}#{new_resource.version} && make install"
+
+  if node["platform"] == "smartos"
+    %w[redis-benchmark redis-check-aof redis-check-dump redis-cli redis-server].each do |cmd|
+      link "/opt/local/bin/#{cmd}" do
+        to "/usr/local/bin/#{cmd}"
+      end
+    end
+  end
+
   new_resource.updated_by_last_action(true)
 end
 
@@ -152,6 +161,7 @@ def configure
           :address                => current['address'],
           :databases              => current['databases'],
           :backuptype             => current['backuptype'],
+          :backupprefix           => current['backupprefix'],
           :datadir                => current['datadir'],
           :timeout                => current['timeout'],
           :loglevel               => current['loglevel'],
@@ -177,7 +187,7 @@ def configure
         })
       end
 
-      case default['redisio']['init_type']
+      case node['redisio']['init_type']
       when 'init'
         template "/etc/init.d/redis#{current['port']}" do
           source 'redis.init.erb'
@@ -193,11 +203,11 @@ def configure
             :piddir => piddir,
             :requirepass => current['requirepass'],
             :platform => node['platform']
-            })
+          })
         end
       when 'smf'
         cli_command = [
-            "/opt/local/bin/redis-cli",
+            "/usr/local/bin/redis-cli",
             "-h #{current['address']}",
             "-p #{current['port']}"
         ]
@@ -208,7 +218,7 @@ def configure
           user 'root'
           group 'root'
 
-          start_command "/opt/local/bin/redis-server #{current['configdir']}/#{current['port']}.conf &"
+          start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current['port']}.conf &"
           start_timeout 60
           stop_command "#{cli_command.join(' ')} shutdown"
           stop_timeout 60

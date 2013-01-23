@@ -101,7 +101,7 @@ databases <%=@databases%>
 rdbcompression yes
 
 # The filename where to dump the DB
-dbfilename dump-<%=@port%>.rdb
+dbfilename <%= "#{@backupprefix}-" if @backupprefix %>dump-<%=@port%>.rdb
 <%end%>
 
 # The working directory.
@@ -285,7 +285,7 @@ appendonly yes
 appendonly no
 <%end%>
 # The name of the append only file (default: "appendonly.aof")
-appendfilename appendonly-<%=@port%>.aof
+appendfilename <%= "#{@backupprefix}-" if @backupprefix %>appendonly-<%=@port%>.aof
 
 # The fsync() call tells the Operating System to actually write data on disk
 # instead to wait for more data in the output buffer. Some OS will really flush 
