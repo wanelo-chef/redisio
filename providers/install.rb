@@ -221,7 +221,7 @@ def configure
           start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current['port']}.conf &"
           start_timeout 60
           stop_command "#{cli_command.join(' ')} shutdown"
-          stop_timeout 60
+          stop_timeout 300
 
           working_directory current['configdir']
         end
