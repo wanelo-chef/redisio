@@ -223,6 +223,8 @@ def configure
           stop_command "#{cli_command.join(' ')} shutdown"
           stop_timeout 300
 
+          environment 'LD_PRELOAD' => 'libumem.so'
+
           working_directory current['configdir']
         end
       end
