@@ -31,19 +31,21 @@ redisio_install "redis-servers" do
 end
 
 redis['servers'].each do |current_server|
+  server_name = current_server['name'] || current_server['port']
+  service_name = "redis#{server_name}"
+
   case node["platform"]
   when "smartos"
-    service "redis#{current_server['port']}" do
+    service service_name do
       supports :enable => true, :disable => true, :restart => true, :reload => true
     end
   else
-    service "redis#{current_server['port']}" do
-      start_command "/etc/init.d/redis#{current_server['port']} start"
-      stop_command "/etc/init.d/redis#{current_server['port']} stop"
-      status_command "pgrep -lf 'redis.*#{current_server['port']}'"
-      restart_command "/etc/init.d/redis#{current_server['port']} start && /etc/init.d/redis#{current_server['port']} start"
+    service service_name do
+      start_command "/etc/init.d/#{service_name} start"
+      stop_command "/etc/init.d/#{service_name} stop"
+      status_command "pgrep -lf 'redis.*#{service_name}'"
+      restart_command "/etc/init.d/#{service_name} stop && /etc/init.d/#{service_name} start"
       supports :start => true, :stop => true, :restart => true, :status => false
     end
   end
 end
-
