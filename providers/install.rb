@@ -77,11 +77,14 @@ def configure
 
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
+    #Name of the service and all config files
+    current_server_id      = RedisioHelper.redis_server_id(current)
+    current_service_name   = RedisioHelper.redis_service_name(current)
 
     recipe_eval do
-      piddir = "#{base_piddir}/#{current['port']}"
-      aof_file = "#{current['datadir']}/appendonly-#{current['port']}.aof"
-      rdb_file = "#{current['datadir']}/dump-#{current['port']}.rdb"  
+      piddir = "#{base_piddir}/#{current_server_id}"
+      aof_file = "#{current['datadir']}/appendonly-#{current_server_id}.aof"
+      rdb_file = "#{current['datadir']}/dump-#{current_server_id}.rdb"
 
       #Create the owner of the redis data directory
       user current['user'] do
@@ -148,7 +151,7 @@ def configure
         only_if { ::File.exists?(rdb_file) }
       end
       #Lay down the configuration files for the current instance
-      template "#{current['configdir']}/#{current['port']}.conf" do
+      template "#{current['configdir']}/#{current_server_id}.conf" do
         source 'redis.conf.erb'
         cookbook 'redisio'
         owner current['user']
@@ -183,13 +186,15 @@ def configure
           :noappendfsynconrewrite => current['noappendfsynconrewrite'],
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
-          :includes               => current['includes']
+          :includes               => current['includes'],
+          :redis_server_id        => RedisioHelper.redis_server_id(current)
         })
       end
 
+
       case node['redisio']['init_type']
       when 'init'
-        template "/etc/init.d/redis#{current['port']}" do
+        template "/etc/init.d/#{current_service_name}" do
           source 'redis.init.erb'
           cookbook 'redisio'
           owner 'root'
@@ -214,11 +219,11 @@ def configure
 
         cli_command << "-a #{current['requirepass']}" if current['requirepass']
 
-        smf "redis#{current['port']}" do
+        smf current_service_name do
           user 'root'
           group 'root'
 
-          start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current['port']}.conf &"
+          start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
           start_timeout 60
           stop_command "#{cli_command.join(' ')} shutdown"
           stop_timeout 300

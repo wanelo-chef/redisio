@@ -48,5 +48,13 @@ module RedisioHelper
         :rc => version_array[3]
     }
   end
+
+  def self.redis_server_id(server)
+    server['name'] || server['port']
+  end
+
+  def self.redis_service_name(server)
+    server['name'] ? "redis-#{redis_server_id(server)}" : "redis#{server['port']}"
+  end
 end
 
