@@ -222,6 +222,7 @@ def configure
         smf current_service_name do
           user 'root'
           group 'root'
+          project current['smf_project']
 
           start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
           start_timeout 60
