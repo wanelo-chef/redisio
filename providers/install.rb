@@ -214,20 +214,23 @@ def configure
         cli_command = [
             "/usr/local/bin/redis-cli",
             "-h #{current['address']}",
-            "-p #{current['port']}"
-        ]
+            "-p #{current['port']}",
+            current['requirepass'] ? "-a #{current['requirepass']}" : nil
+        ].compact.join(' ')
 
-        cli_command << "-a #{current['requirepass']}" if current['requirepass']
+        server_command = "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
 
         smf current_service_name do
           user 'root'
           group 'root'
           project current['smf_project']
 
-          start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
+          start_command server_command
           start_timeout 60
-          stop_command "#{cli_command.join(' ')} shutdown"
+          stop_command "#{cli_command} shutdown"
           stop_timeout 300
+          restart_command "#{cli_command} save && #{cli_command} shutdown && #{server_command}"
+          restart_timeout 600
 
           working_directory current['configdir']
         end
