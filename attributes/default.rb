@@ -73,7 +73,9 @@ default['redisio']['default_settings'] = {
   'noappendfsynconrewrite' => 'no',
   'aofrewritepercentage'   => '100',
   'aofrewriteminsize'      => '64mb',
-  'includes'               => nil
+  'includes'               => nil,
+  'hashmaxziplistentries'  => 512,
+  'zsetmaxziplistentries'  => 128
 }
 
 #Individual server overrides, port is required and must be unique per instance, by default we setup a single redis instance on the default redis port of 6379
