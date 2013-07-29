@@ -187,7 +187,9 @@ def configure
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
           :includes               => current['includes'],
-          :redis_server_id        => RedisioHelper.redis_server_id(current)
+          :redis_server_id        => RedisioHelper.redis_server_id(current),
+          :hashmaxziplistentries  => current['hashmaxziplistentries'],
+          :zsetmaxziplistentries  => current['zsetmaxziplistentries']
         })
       end
 

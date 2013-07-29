@@ -463,11 +463,11 @@ vm-max-threads 4
 <% #Once the first official 2.6 release is out, it would make sense to remove the extraneous :minor 5 comparison %>
 <% if @version[:major].to_i == 2 && (@version[:minor].to_i == 6 || @version[:minor].to_i == 5)  %> 
   ######## Redis 2.6 ########
-  hash-max-ziplist-entries 512
+  hash-max-ziplist-entries <%= @hashmaxziplistentries %>
   hash-max-ziplist-value 64
 <% elsif @version[:major].to_i == 2 && @version[:minor].to_i == 4 %>
   ######## Redis 2.4 ########
-  hash-max-zipmap-entries 512
+  hash-max-zipmap-entries <%= @hashmaxziplistentries %>
   hash-max-zipmap-value 64
 <% end %>
 
@@ -487,7 +487,7 @@ set-max-intset-entries 512
 # Similarly to hashes and lists, sorted sets are also specially encoded in
 # order to save a lot of space. This encoding is only used when the length and
 # elements of a sorted set are below the following limits:
-zset-max-ziplist-entries 128
+zset-max-ziplist-entries <%= @zsetmaxziplistentries %>
 zset-max-ziplist-value 64
 
 # Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
