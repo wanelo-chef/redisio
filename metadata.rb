@@ -16,4 +16,4 @@ recipe "redisio::enable", "This recipe is used to start the redis instances and 
 recipe "redisio::disable", "this recipe is used to stop the redis instances and disable them in the default run levels"
 recipe "redisio::redis_gem", "this recipe will install the redis ruby gem into the system ruby"
 
-depends 'smf' # when running on smartos
+depends 'smf', '>= 1.5.0' # when running on smartos

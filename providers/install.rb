@@ -227,6 +227,8 @@ def configure
           group 'root'
           project current['smf_project']
 
+          dependencies current['smf_dependencies']
+
           start_command server_command
           start_timeout 60
           stop_command "#{cli_command} shutdown"
