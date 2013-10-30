@@ -231,10 +231,8 @@ def configure
 
           start_command server_command
           start_timeout 60
-          stop_command %Q(/usr/bin/bash -c 'LISTEN=`netstat -an | grep "#{current['address']}.#{current['port']}" | grep LISTEN`; if [ ! -z "$LISTEN" ]; then #{cli_command} shutdown; fi')
+          stop_command %Q(/usr/bin/bash -c 'LISTEN=`netstat -an | grep "#{current['address']}.#{current['port']}" | grep LISTEN`; if [ ! -z "$LISTEN" ]; then #{cli_command} shutdown save; fi')
           stop_timeout 300
-          restart_command "#{cli_command} save && #{cli_command} shutdown && #{server_command}"
-          restart_timeout 600
 
           working_directory current['configdir']
         end
