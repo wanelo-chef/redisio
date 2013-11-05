@@ -102,7 +102,7 @@ databases <%=@databases%>
 rdbcompression yes
 
 # The filename where to dump the DB
-dbfilename <%= "#{@backupprefix}-" if @backupprefix %>dump-<%=@redis_server_id%>.rdb
+dbfilename <%= @dbfilename %>
 <%end%>
 
 # The working directory.

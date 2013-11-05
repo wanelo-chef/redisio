@@ -165,6 +165,7 @@ def configure
           :databases              => current['databases'],
           :backuptype             => current['backuptype'],
           :backupprefix           => current['backupprefix'],
+          :dbfilename             => RedisioHelper.dbfilename(current),
           :datadir                => current['datadir'],
           :timeout                => current['timeout'],
           :loglevel               => current['loglevel'],

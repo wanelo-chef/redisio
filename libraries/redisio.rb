@@ -41,7 +41,7 @@ module RedisioHelper
     version_array = version_string.split('.') 
     version_array[2] = version_array[2].split("-")
     version_array.flatten!
-    version_hash = { 
+    {
         :major => version_array[0],
         :minor => version_array[1],
         :tiny => version_array[2],
@@ -56,5 +56,13 @@ module RedisioHelper
   def self.redis_service_name(server)
     server['name'] ? "redis-#{redis_server_id(server)}" : "redis#{server['port']}"
   end
+
+  def self.dbfilename(server)
+    out = ""
+    out << "#{server["backupprefix"]}-" if server["backupprefix"]
+    out << "dump-#{RedisioHelper.redis_server_id(server)}.rdb"
+    out
+  end
+
 end
 
