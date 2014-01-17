@@ -214,15 +214,6 @@ def configure
           })
         end
       when 'smf'
-        cli_command = [
-            "/usr/local/bin/redis-cli",
-            "-h #{current['address']}",
-            "-p #{current['port']}",
-            current['requirepass'] ? "-a #{current['requirepass']}" : nil
-        ].compact.join(' ')
-
-        server_command = "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
-
         smf current_service_name do
           user 'root'
           group 'root'
@@ -230,9 +221,9 @@ def configure
 
           dependencies current['smf_dependencies']
 
-          start_command server_command
+          start_command "/usr/local/bin/redis-server #{current['configdir']}/#{current_server_id}.conf &"
           start_timeout 60
-          stop_command %Q(/usr/bin/bash -c 'LISTEN=`netstat -an | grep "#{current['address']}.#{current['port']}" | grep LISTEN`; if [ ! -z "$LISTEN" ]; then #{cli_command} shutdown save; fi')
+          stop_command ':kill' # redis will issue a synchronous save before shutting down
           stop_timeout 300
 
           working_directory current['configdir']
