@@ -91,7 +91,8 @@ default['redisio']['default_settings'] = {
   'smf_project'            => nil, # only used in Solaris-like OSs
   'smf_dependencies'       => [],  # see https://github.com/livinginthepast/smf
   'hashmaxziplistentries'  => 512,
-  'zsetmaxziplistentries'  => 128
+  'zsetmaxziplistentries'  => 128,
+  'stopwritesonbgsaveerror' => 'yes'
 }
 
 #Individual server overrides, port is required and must be unique per instance, by default we setup a single redis instance on the default redis port of 6379

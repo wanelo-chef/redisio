@@ -192,7 +192,8 @@ def configure
           :includes               => current['includes'],
           :redis_server_id        => RedisioHelper.redis_server_id(current),
           :hashmaxziplistentries  => current['hashmaxziplistentries'],
-          :zsetmaxziplistentries  => current['zsetmaxziplistentries']
+          :zsetmaxziplistentries  => current['zsetmaxziplistentries'],
+          :stopwritesonbgsaveerror => current['stopwritesonbgsaveerror'],
         })
       end
 
