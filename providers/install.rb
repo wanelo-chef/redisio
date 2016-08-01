@@ -173,6 +173,7 @@ def configure
           :noappendfsynconrewrite => current['noappendfsynconrewrite'],
           :aofrewritepercentage   => current['aofrewritepercentage'] ,
           :aofrewriteminsize      => current['aofrewriteminsize'],
+          :stopwritesonbgsaveerror => current['stopwritesonbgsaveerror'],
           :includes               => current['includes']
         })
       end

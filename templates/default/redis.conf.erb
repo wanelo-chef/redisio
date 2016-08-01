@@ -102,6 +102,9 @@ rdbcompression yes
 
 # The filename where to dump the DB
 dbfilename dump-<%=@port%>.rdb
+
+# Block writes on bgsave error
+stop-writes-on-bgsave-error <%= @stopwritesonbgsaveerror %>
 <%end%>
 
 # The working directory.
