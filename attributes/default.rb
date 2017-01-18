@@ -36,7 +36,7 @@ end
 default['redisio']['safe_install'] = true
 
 #Tarball and download related defaults
-default['redisio']['mirror'] = "https://redis.googlecode.com/files"
+default['redisio']['mirror'] = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/redis"
 default['redisio']['base_name'] = 'redis-'
 default['redisio']['artifact_type'] = 'tar.gz'
 default['redisio']['version'] = '2.6.4'
